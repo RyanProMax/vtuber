@@ -1,12 +1,4 @@
-## Electron + React + Rspack
-
-An Electron boilerplate including TypeScript, React, Rspack and ESLint.
-
-> Reference [electron-react-boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate)
-
-![ElectronReactRspack](https://github.com/RyanProMax/image-hub/blob/main/electron-react-rspack/03.png)
-
-![AutoUpdate](https://github.com/RyanProMax/image-hub/blob/main/electron-react-rspack/04.png)
+## Vtuber
 
 ## Installation
 
@@ -36,18 +28,11 @@ pnpm package
 
 ## Features
 
-- [x] typescript
-- [x] rspack
-- [x] electron-store: local persistent storage.
-- [x] electron-log
-- [x] electron-builder
-- [x] electron-updater: auto update app version.
-- [x] eslint
-- [x] less
-- [x] [arco-design](https://github.com/arco-design/arco-design): a comprehensive React UI components library.
-- [x] theme: light/dark mode.
-- [x] CI/CD: auto build and release when push tag.
+- [ ] tts
+- [ ] barrage identification
+- [ ] auto reply
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/) © [Ryan](https://github.com/RyanProMax)
+[GNU Lesser General Public License v3.0](https://choosealicense.com/licenses/lgpl-3.0/)
+© [Ryan](https://github.com/RyanProMax)
