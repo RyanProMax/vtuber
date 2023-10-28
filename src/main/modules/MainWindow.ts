@@ -17,8 +17,8 @@ export default class MainWindow {
   private createWindow() {
     const browserWindow = new BrowserWindow({
       show: false,
-      width: 1024,
-      height: 728,
+      width: 720,
+      height: 480,
       minWidth: 720,
       minHeight: 480,
       autoHideMenuBar: true,
