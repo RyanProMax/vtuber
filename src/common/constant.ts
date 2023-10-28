@@ -27,4 +27,7 @@ export enum Channels {
 
   // sub window
   AboutMe = 'AboutMe',
+
+  // TTS
+  StartTTS = 'StartTTS',
 }

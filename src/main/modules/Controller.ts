@@ -8,12 +8,14 @@ import Store from './Store';
 import AppUpdater from './AppUpdater';
 import MainWindow from './MainWindow';
 import AboutWindow from './AboutWindow';
+import TTS from './TTS';
 
 export class Controller {
   logger = logger.scope('controller');
 
   store: Store | null = null;
-  appUpdater: AppUpdater = new AppUpdater();
+  appUpdater = new AppUpdater();
+  tts = new TTS();
 
   mainWindow: MainWindow | null = null;
   aboutWindow: AboutWindow | null = null;
@@ -65,6 +67,9 @@ export class Controller {
 
     this.mainWindow?.register();
     this.aboutWindow?.register();
+
+    // TTS
+    this.tts.register();
   }
 
   private _register() {

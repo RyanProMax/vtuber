@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { IconSound } from '@arco-design/web-react/icon';
 
-import TTS from './TTS';
+import TTS from 'src/renderer/components/TTS';
 
 export const Menus = [
   {
