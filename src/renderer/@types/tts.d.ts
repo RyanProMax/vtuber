@@ -1,4 +1,6 @@
-import { TTSStatus } from '../hooks/useTTS';
+import Languages from 'src/common/langs';
+import Voices from 'src/common/voices';
+import { TTSStatus } from 'src/renderer/hooks/useTTS';
 
 declare global {
   namespace TTS {
@@ -37,6 +39,16 @@ declare global {
       cost: number
       text: string
       status: TTSStatus
+    }
+
+    type SelectOptions = {
+      language: Languages
+      voice: typeof Voices[number]['id']
+    }
+
+    type Options = {
+      languages: { key: string, value: string }[]
+      voices: typeof Voices
     }
   }
 }

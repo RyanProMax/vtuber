@@ -1,30 +1,36 @@
-import { useState } from 'react';
-import { Button, Input, Empty } from '@arco-design/web-react';
+import { Button, Input, Empty, Form } from '@arco-design/web-react';
 import { IconMusic } from '@arco-design/web-react/icon';
 
-import useTTS from 'src/renderer/hooks/useTTS';
+import useTTS, { getFilterVoices } from 'src/renderer/hooks/useTTS';
 
 import History from './History';
+import TTSForm from './TTSForm';
 
 import './index.less';
 
 export default () => {
-  const [text, setText] = useState('你好呀旅行者');
+  const [form] = Form.useForm();
   const {
-    history, isReady, isLoading, isPlaying,
-    onStart,
+    history, isReady, isLoading, isPlaying, onStart,
+    selectOptions, setSelectOptions, options, text, setText,
   } = useTTS();
 
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.code === 'Enter') {
-      handleStart();
+      onStart();
     }
   };
 
-  const handleStart = () => onStart({
-    text, voice: 'zh-CN-XiaoxiaoNeural',
-    express: 'affectionate',
-  });
+  const onValuesChange = (value: Partial<TTS.SelectOptions>) => {
+    setSelectOptions(oldV => ({
+      ...oldV,
+      ...value,
+    }));
+    if (Object.keys(value)[0] === 'language') {
+      const filterVoices = getFilterVoices(value.language!);
+      form.setFieldValue('voice', filterVoices[0]?.id || '');
+    }
+  };
 
   return (
     <div className='tts'>
@@ -48,7 +54,7 @@ export default () => {
           <Button
             type='primary'
             loading={isLoading}
-            onClick={handleStart}
+            onClick={onStart}
             disabled={!isReady}
           >
             {isPlaying ? (
@@ -57,10 +63,13 @@ export default () => {
           </Button>
         </Input.Group>
       </div>
-
-      <div className='tts__right'>
-
-      </div>
+      <TTSForm
+        form={form}
+        initialValues={selectOptions}
+        onValuesChange={onValuesChange}
+        options={options}
+        className='tts__right'
+      />
     </div>
   );
 };

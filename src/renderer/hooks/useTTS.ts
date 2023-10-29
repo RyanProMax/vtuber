@@ -1,8 +1,10 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 
 import { Channels } from 'src/common/constant';
 import { ipcRenderer } from 'src/renderer/utils';
+import Languages from 'src/common/langs';
+import AllVoices from 'src/common/voices';
 
 export enum TTSStatus {
   Ready = 'ready',
@@ -11,26 +13,52 @@ export enum TTSStatus {
   Done = 'done',
 }
 
+export const getFilterVoices = (language: Languages) => {
+  return AllVoices.filter(x => x.properties.localeZH === (language));
+};
+
 export default () => {
   const audioRef = useRef<HTMLAudioElement>();
+
+  // status
   const [status, setStatus] = useState(TTSStatus.Ready);
   const [history, setHistory] = useState<TTS.HistoryItem[]>([]);
   const isReady = status === TTSStatus.Ready;
   const isLoading = status === TTSStatus.Loading;
   const isPlaying = status === TTSStatus.Playing;
 
-  const onStart = async ({ text }: TTS.SSMLConvertRequest) => {
+  // config
+  const [text, setText] = useState('你好呀旅行者');
+  const [selectOptions, setSelectOptions] = useState<TTS.SelectOptions>({
+    language: Languages.ZH_CN,
+    voice: AllVoices.find(x => x.shortName === 'zh-CN-XiaoxuanNeural')!.id,
+  });
+  const options: TTS.Options = useMemo(() => {
+    return {
+      languages: Object.entries(Languages).map(([key, value]) => ({
+        key, value,
+      })),
+      voices: getFilterVoices(selectOptions.language),
+    };
+  }, [selectOptions]);
+
+  console.log('options', options);
+  console.log('selectOptions', selectOptions);
+
+  const onStart = async () => {
     if (status !== TTSStatus.Ready) {
       return false;
     }
 
     setStatus(TTSStatus.Loading);
-    const result: TTS.StartResponse = await ipcRenderer.invoke(Channels.StartTTS, {
+    const options: TTS.StartRequest = {
       text,
-      voice: 'zh-CN-XiaoxiaoNeural',
+      voice: AllVoices.find(x => x.id === selectOptions.voice)?.shortName || 'zh-CN-XiaoxuanNeural',
       express: 'affectionate',
       retryCount: 10,
-    } as TTS.StartRequest);
+      retryInterval: 1000,
+    };
+    const result: TTS.StartResponse = await ipcRenderer.invoke(Channels.StartTTS, options);
 
     if (result?.data) {
       const audioBlob = new Blob([result.data]);
@@ -72,7 +100,7 @@ export default () => {
   });
 
   return {
-    history, status, isReady, isLoading, isPlaying,
-    onStart,
+    history, status, isReady, isLoading, isPlaying, onStart,
+    selectOptions, setSelectOptions, options, text, setText,
   };
 };
