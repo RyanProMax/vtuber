@@ -1,7 +1,8 @@
 import { Button, Input, Empty, Form } from '@arco-design/web-react';
 import { IconMusic } from '@arco-design/web-react/icon';
+import { get } from 'lodash-es';
 
-import useTTS, { getFilterVoices } from 'src/renderer/hooks/useTTS';
+import useTTS, { getFilterVoices, getVoice } from 'src/renderer/hooks/useTTS';
 
 import History from './History';
 import TTSForm from './TTSForm';
@@ -28,7 +29,13 @@ export default () => {
     }));
     if (Object.keys(value)[0] === 'language') {
       const filterVoices = getFilterVoices(value.language!);
-      form.setFieldValue('voice', filterVoices[0]?.id || '');
+      form.setFieldValue('voiceId', filterVoices[0]?.id || '');
+    }
+    if (Object.keys(value)[0] === 'voiceId') {
+      const voice = getVoice(value.voiceId!);
+      const styleName = get(voice, 'samples.styleSamples[0].styleName', '');
+      const roleName = get(voice, 'samples.roleSamples[0].roleName', '');
+      form.setFieldsValue({ styleName, roleName });
     }
   };
 

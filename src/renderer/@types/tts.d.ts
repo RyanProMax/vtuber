@@ -7,7 +7,7 @@ declare global {
     type SSMLConvertRequest = {
       text: string
       voice: string
-      express: string
+      style?: string
       role?: string
       rate?: number
       pitch?: number
@@ -43,7 +43,11 @@ declare global {
 
     type SelectOptions = {
       language: Languages
-      voice: typeof Voices[number]['id']
+      voiceId: string,
+      styleName: string,
+      roleName: string,
+      rate: number,
+      pitch: number,
     }
 
     type Options = {

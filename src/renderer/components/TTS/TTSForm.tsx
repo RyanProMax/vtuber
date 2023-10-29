@@ -1,4 +1,6 @@
-import { Form, Select } from '@arco-design/web-react';
+import { Form, Select, Slider } from '@arco-design/web-react';
+
+import { getVoice } from 'src/renderer/hooks/useTTS';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -16,6 +18,9 @@ export default ({
   ) => void
   className?: string
 }) => {
+  const voice = getVoice(initialValues.voiceId);
+  const { roleSamples, styleSamples } = voice?.samples || {};
+
   return (
     <Form
       form={form}
@@ -34,7 +39,7 @@ export default ({
           ))}
         </Select>
       </FormItem>
-      <FormItem label='Voice' field='voice'>
+      <FormItem label='Voice' field='voiceId'>
         <Select placeholder='Please select'>
           {options.voices.map((item) => (
             <Option key={item.id} value={item.id}>
@@ -42,6 +47,34 @@ export default ({
             </Option>
           ))}
         </Select>
+      </FormItem>
+      {styleSamples?.length ? (
+        <FormItem label='Style' field='styleName'>
+          <Select placeholder='Please select'>
+            {styleSamples.map((item) => (
+              <Option key={item.styleName} value={item.styleName}>
+                {item.styleName}
+              </Option>
+            ))}
+          </Select>
+        </FormItem>
+      ) : null}
+      {roleSamples?.length ? (
+        <FormItem label='Role' field='roleName'>
+          <Select placeholder='Please select'>
+            {roleSamples.map((item) => (
+              <Option key={item.roleName} value={item.roleName}>
+                {item.roleName}
+              </Option>
+            ))}
+          </Select>
+        </FormItem>
+      ) : null}
+      <FormItem label='Rate' field='rate'>
+        <Slider showInput max={300} />
+      </FormItem>
+      <FormItem label='Pitch' field='pitch'>
+        <Slider showInput max={300} />
       </FormItem>
     </Form>
   );

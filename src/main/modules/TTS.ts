@@ -65,14 +65,14 @@ export default class TTS {
   }
 
   private convertToSSML({
-    text, voice, express, role = '',
-    rate = 0, pitch = 0,
+    text, voice, style = '', role = '',
+    rate = 100, pitch = 100,
   }: TTS.SSMLConvertRequest) {
     return `
       <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
         <voice name="${voice}">
-          <mstts:express-as ${express != '' ? 'style="' + express + '"' : ''} ${role != '' ? 'role="' + role + '"' : ''}>
-            <prosody rate="${rate}%" pitch="${pitch}%">
+          <mstts:express-as ${style ? `style="${style}"` : ''} ${role ? `role="${role}"` : ''}>
+            <prosody rate="${rate - 100}%" pitch="${pitch - 100}%">
               ${text}
             </prosody>
           </mstts:express-as>
