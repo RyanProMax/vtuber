@@ -32,6 +32,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.8
     version: registry.npmmirror.com/@types/react-dom@18.2.8
+  '@types/uuid':
+    specifier: ^9.0.6
+    version: registry.npmmirror.com/@types/uuid@9.0.6
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.7.4
     version: registry.npmmirror.com/@typescript-eslint/eslint-plugin@6.7.4(@typescript-eslint/parser@6.7.4)(eslint@8.50.0)(typescript@5.2.2)
@@ -104,6 +107,9 @@ devDependencies:
   typescript:
     specifier: ^5.2.2
     version: registry.npmmirror.com/typescript@5.2.2
+  uuid:
+    specifier: ^9.0.1
+    version: registry.npmmirror.com/uuid@9.0.1
 
 packages:
 
@@ -2922,6 +2928,12 @@ packages:
     version: 0.3.34
     dependencies:
       '@types/node': registry.npmmirror.com/@types/node@20.8.2
+    dev: true
+
+  registry.npmmirror.com/@types/uuid@9.0.6:
+    resolution: {integrity: sha512-BT2Krtx4xaO6iwzwMFUYvWBWkV2pr37zD68Vmp1CDV196MzczBRxuEpD6Pr395HAgebC/co7hOphs53r8V7jew==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/uuid/-/uuid-9.0.6.tgz}
+    name: '@types/uuid'
+    version: 9.0.6
     dev: true
 
   registry.npmmirror.com/@types/verror@1.10.7:
@@ -8706,6 +8718,13 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/uuid/-/uuid-8.3.2.tgz}
     name: uuid
     version: 8.3.2
+    hasBin: true
+    dev: true
+
+  registry.npmmirror.com/uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/uuid/-/uuid-9.0.1.tgz}
+    name: uuid
+    version: 9.0.1
     hasBin: true
     dev: true
 

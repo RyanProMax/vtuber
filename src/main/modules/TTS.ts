@@ -2,11 +2,7 @@ import { ipcMain } from 'electron';
 import axios from 'axios';
 import { logger } from '../utils/logger';
 import { Channels } from '../../common/constant';
-
-export enum TTSInputType {
-  Text,
-  SSML,
-}
+import { sleep } from '../utils';
 
 export default class TTS {
   logger = logger.scope('TTS');
@@ -14,7 +10,7 @@ export default class TTS {
   private buffer = Buffer.alloc(0);
 
   register() {
-    ipcMain.handle(Channels.StartTTS, (_, params: TTSRequest) => {
+    ipcMain.handle(Channels.StartTTS, (_, params: TTS.StartRequest) => {
       return this.start(params);
     });
   }
@@ -23,42 +19,44 @@ export default class TTS {
     this.buffer = Buffer.alloc(0);
   }
 
-  async start(params: TTSRequest) {
+  async start(params: TTS.StartRequest): Promise<TTS.StartResponse> {
     this.resetBuffer();
-    const _buffer = await this.getAudio(params);
-    if (_buffer?.length > 0) {
-      this.buffer = Buffer.concat([this.buffer, _buffer]);
+    const result = await this.getAudio(params);
+    if (result?.data.length) {
+      this.buffer = Buffer.concat([this.buffer, result.data]);
     }
-    return this.buffer;
-    // if (this.buffer.length > 0) {
-    //   const audioBlob = new Blob([this.buffer]);
-    //   const url = URL.createObjectURL(audioBlob);
-    //   this.logger.info('url', url);
-    //   return url;
-    // }
-    // return null;
+    if (this.buffer.length > 0) {
+      return {
+        cost: result!.cost,
+        data: this.buffer,
+      };
+    }
+    return null;
   }
 
   async getAudio({
-    retryCount = 0, retryInterval = 1000, ...params
-  }: TTSRequest) {
+    startTime = Date.now(), retryCount = 0, retryInterval = 1000,
+    ...params
+  }: TTS.StartRequest): Promise<TTS.GetAudioResult> {
     try {
       const SSML = this.convertToSSML(params);
       console.log(SSML, retryCount, retryInterval);
-      const result = await this.fetchMSSpeechAPI(SSML);
-      this.logger.info('fetch MSSpeech API success');
-      return result;
+      const buffer = await this.fetchMSSpeechAPI(SSML);
+      this.logger.info('fetch MSSpeech API success', buffer.length);
+
+      return {
+        cost: Date.now() - startTime,
+        data: buffer
+      };
     } catch (e) {
-      this.logger.error('Failed', e);
+      this.logger.error('fetch MSSpeech API failed', e, retryCount);
       if (retryCount > 0) {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(this.getAudio({
-              retryCount: retryCount - 1,
-              retryInterval,
-              ...params,
-            }));
-          }, retryInterval);
+        await sleep(retryInterval);
+        return this.getAudio({
+          startTime,
+          retryCount: retryCount - 1,
+          retryInterval,
+          ...params,
         });
       } else {
         return null;
@@ -69,7 +67,7 @@ export default class TTS {
   private convertToSSML({
     text, voice, express, role = '',
     rate = 0, pitch = 0,
-  }: SSMLConvertRequest) {
+  }: TTS.SSMLConvertRequest) {
     return `
       <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
         <voice name="${voice}">
@@ -84,7 +82,7 @@ export default class TTS {
   }
 
   private async fetchMSSpeechAPI(SSML: string) {
-    const result = await axios({
+    const result: TTS.MSSpeechAPIResponse = await axios({
       url: 'https://southeastasia.api.speech.microsoft.com/accfreetrial/texttospeech/acc/v3.0-beta1/vcg/speak',
       method: 'post',
       responseType: 'arraybuffer',
@@ -114,6 +112,7 @@ export default class TTS {
         },
       }),
     });
+
     return result.data;
   }
 }

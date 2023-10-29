@@ -39,3 +39,9 @@ export const getPackageJson = () => {
 
   return fse.readFile(filePath, 'utf-8');
 };
+
+export const sleep = (duration: number) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, duration);
+  });
+};
