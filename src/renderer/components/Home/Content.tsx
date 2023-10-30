@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import { IconSound } from '@arco-design/web-react/icon';
+import { IconSound, IconSettings } from '@arco-design/web-react/icon';
 
 import TTS from 'src/renderer/components/TTS';
+import Settings from 'src/renderer/components/Settings';
 
 export const Menus = [
   {
@@ -10,6 +11,13 @@ export const Menus = [
       <IconSound /> TTS
     </>,
     Component: <TTS />,
+  },
+  {
+    path: '/settings',
+    MenuElement: <>
+      <IconSettings /> Settings
+    </>,
+    Component: <Settings />,
   },
 ];
 

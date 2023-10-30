@@ -1,11 +1,7 @@
 @import '../../styles/common.less';
 
-@gap: 12px;
-@background-color--tts: rgba(var(--gray-1));
-@pointSize: 6px;
-
 .tts {
-  width: 100%;
+  flex: 1;
   height: 100%;
   padding: 0 @gap @gap;
   box-sizing: border-box;
@@ -29,7 +25,8 @@
     width: 240px;
     height: 100%;
     box-sizing: border-box;
-    background-color: @background-color--tts;
+    border-radius: @borderRadius;
+    background-color: @background-color--sub;
   }
 
   &__content {
@@ -38,9 +35,10 @@
     flex: 1;
     padding: 12px 18px 12px 32px;
     box-sizing: border-box;
-    background-color: @background-color--tts;
+    background-color: @background-color--sub;
     overflow-x: hidden;
     overflow-y: auto;
+    border-radius: @borderRadius;
     .scroll-bar();
 
     display: flex;
