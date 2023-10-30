@@ -1,7 +1,7 @@
 @import '../../styles/common.less';
 
 @gap: 12px;
-@background-color: rgba(var(--color-rgb-0), 0.1);
+@background-color--tts: rgba(var(--gray-1));
 @pointSize: 6px;
 
 .tts {
@@ -12,6 +12,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  background-color: @background-color;
 
   &__left {
     flex: 1;
@@ -28,7 +29,7 @@
     width: 240px;
     height: 100%;
     box-sizing: border-box;
-    background-color: @background-color;
+    background-color: @background-color--tts;
   }
 
   &__content {
@@ -37,7 +38,7 @@
     flex: 1;
     padding: 12px 18px 12px 32px;
     box-sizing: border-box;
-    background-color: @background-color;
+    background-color: @background-color--tts;
     overflow-x: hidden;
     overflow-y: auto;
     .scroll-bar();

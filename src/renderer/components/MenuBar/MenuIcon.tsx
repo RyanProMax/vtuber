@@ -10,12 +10,13 @@ import IconUnmaximize from 'src/renderer/images/unmaximize.svg';
 import './MenuIcon.less';
 
 export default ({
-  minimize = false, maximize = false, closable = true,
+  minimize = false, maximize = false, closable = true, customIcon,
   isDefaultMaximize = false, className
 }: {
   minimize?: boolean
   maximize?: boolean
   closable?: boolean
+  customIcon?: React.ReactElement
   isDefaultMaximize?: boolean
   className?: string
 }) => {
@@ -36,6 +37,7 @@ export default ({
 
   return (
     <div className={classnames('menu-icon', className)}>
+      {customIcon}
       {minimize ? (
         <IconMinus onClick={onMinimize} className='menu-icon__item' />
       ) : null}

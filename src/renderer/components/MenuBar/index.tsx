@@ -4,12 +4,13 @@ import MenuIcon from './MenuIcon';
 import './index.less';
 
 export default ({
-  title, minimize = false, maximize = false, closable = true,
+  title, minimize = false, maximize = false, closable = true, customIcon,
 }: {
   title?: string
   minimize?: boolean
   maximize?: boolean
   closable?: boolean
+  customIcon?: React.ReactElement
 }) => {
   return (
     <div className='menu-bar'>
@@ -17,7 +18,12 @@ export default ({
         <img src={logo} className='menu-bar__logo' />
         {title ? <span>{title}</span> : null}
       </div>
-      <MenuIcon minimize={minimize} maximize={maximize} closable={closable} />
+      <MenuIcon
+        customIcon={customIcon}
+        minimize={minimize}
+        maximize={maximize}
+        closable={closable}
+      />
     </div >
   );
 };

@@ -11,7 +11,7 @@ import Content from './Content';
 import './index.less';
 
 export default () => {
-  const { theme } = useDarkMode();
+  const { theme, toggleTheme, ThemeIcon } = useDarkMode();
   const packageJson = usePackageJson();
   const title = packageJson
     ? `${packageJson.name.split('-').map(upperFirst).join('')} Ver: ${packageJson.version}`
@@ -24,6 +24,11 @@ export default () => {
           title={title}
           minimize={true}
           maximize={true}
+          customIcon={(
+            <div className={'home__custom-container'}>
+              <ThemeIcon onClick={toggleTheme} className={'menu-icon__item'} />
+            </div>
+          )}
         />
         <div className='home__main'>
           <Sidebar
