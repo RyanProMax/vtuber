@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { getUserStore, setUserStore } from '../utils';
 
 export enum Platforms {
@@ -9,9 +9,12 @@ export enum SettingTypes {
   TTS = 'TTS',
 }
 
-const defaultOptions: Settings.SelectOptions = {
+const defaultPlatformOptions: Settings.PlatformOptions = {
   platform: Platforms.IFlyTek,
   settingType: SettingTypes.TTS,
+};
+
+const defaultOptions: Settings.IFlyTekSelectOptions = {
   appID: '',
   apiKey: '',
   apiSecret: '',
@@ -24,47 +27,35 @@ const getSettingTypes = (platform: Platforms) => {
   }
 };
 
-const getPlatformSettings = (key: string) => {
-  return getUserStore(key);
-};
-
-const setPlatformSettings = async (key: string, value: Partial<Settings.SelectOptions>) => {
-  const oldValue = await getPlatformSettings(key);
-  return setUserStore(key, { ...oldValue, ...value });
-};
-
 export default () => {
-  const [selectOptions, setSelectOptions] = useState(defaultOptions);
-  const storeKey = `${selectOptions.platform}_${selectOptions.settingType}`;
+  const [platformOptions] = useState(defaultPlatformOptions);
+  const [selectOptions, setSelectOptions] = useState<Settings.SelectOptions>(defaultOptions);
+  const storeKey = `${platformOptions.platform}_${platformOptions.settingType}`;
   const options = useMemo(() => {
     return {
       platforms: Object.entries(Platforms).map(([key, value]) => ({
         key, value, label: value,
       })),
-      types: getSettingTypes(selectOptions.platform),
+      types: getSettingTypes(platformOptions.platform),
     };
-  }, [selectOptions.platform]);
+  }, [platformOptions.platform]);
 
-  const onChangePlatform = (value: Platforms) => {
-    console.log('onChangePlatform', value);
+  const onChangePlatformOptions = (value: Partial<Settings.PlatformOptions>) => {
+    console.log('onChangePlatformOptions', value);
   };
 
-  const onChangeFields = (value: Partial<Settings.SelectOptions>) => {
-    if (['platform', 'settingType'].includes(Object.keys(value)[0])) {
-      return;
-    }
-    setPlatformSettings(storeKey, value);
+  const getPlatformSettings = () => {
+    return getUserStore(storeKey) as Promise<Settings.SelectOptions>;
+  };
+
+  const setPlatformSettings = async (value: Partial<Settings.SelectOptions>) => {
     setSelectOptions(oldV => ({ ...oldV, ...value }));
+    const oldValue = await getPlatformSettings();
+    return setUserStore(storeKey, { ...oldValue, ...value });
   };
-
-  useEffect(() => {
-    (async () => {
-      const settings = await getPlatformSettings(storeKey);
-      setSelectOptions(oldV => ({ ...oldV, ...settings }));
-    })();
-  }, [selectOptions.platform]);
 
   return {
-    selectOptions, onChangeFields, options, onChangePlatform,
+    platformOptions, selectOptions, options, onChangePlatformOptions,
+    getPlatformSettings, setPlatformSettings,
   };
 };

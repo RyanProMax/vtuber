@@ -1,4 +1,5 @@
 import { Form, Input, Radio } from '@arco-design/web-react';
+import { useEffect } from 'react';
 
 import useSettings from 'src/renderer/hooks/useSettings';
 
@@ -11,26 +12,34 @@ export default () => {
   const [form] = Form.useForm();
 
   const {
-    selectOptions, onChangeFields, options, onChangePlatform
+    platformOptions, selectOptions, options, onChangePlatformOptions,
+    getPlatformSettings, setPlatformSettings,
   } = useSettings();
 
   console.log('selectOptions', selectOptions);
   console.log('options', options);
+
+  useEffect(() => {
+    (async () => {
+      const formData = await getPlatformSettings();
+      form.setFieldsValue(formData);
+    })();
+  }, []);
 
   return (
     <div className='settings'>
       <Form
         form={form}
         initialValues={selectOptions}
-        onValuesChange={onChangeFields}
+        onValuesChange={setPlatformSettings}
         autoComplete='off'
         className={'settings__form'}
       >
         <FormItem label='Platform'>
-          <RadioGroup value={selectOptions.platform} options={options.platforms} onChange={onChangePlatform} />
+          <RadioGroup value={platformOptions.platform} options={options.platforms} onChange={v => onChangePlatformOptions({ platform: v })} />
         </FormItem>
-        <FormItem label='Type' field='settingType'>
-          <RadioGroup options={options.types} />
+        <FormItem label='Type'>
+          <RadioGroup value={platformOptions.settingType} options={options.types} onChange={v => onChangePlatformOptions({ settingType: v })} />
         </FormItem>
         <FormItem label='AppID' field='appID'>
           <Input placeholder='Please Input Your AppID' />

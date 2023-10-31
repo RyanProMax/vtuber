@@ -2,9 +2,12 @@ import { Platforms, SettingTypes } from '../hooks/useSettings';
 
 declare global {
   namespace Settings {
-    type IFlyTekSelectOptions = {
+    type PlatformOptions = {
       platform: Platforms
       settingType: SettingTypes
+    };
+
+    type IFlyTekSelectOptions = {
       appID: string
       apiSecret: string
       apiKey: string
