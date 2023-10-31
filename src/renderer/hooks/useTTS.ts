@@ -31,7 +31,7 @@ export default () => {
 
   // config
   const [text, setText] = useState('你好呀旅行者');
-  const [platform] = useState(TTSPlatforms.IFlyTek);
+  const [platform, onChangePlatform] = useState(TTSPlatforms.IFlyTek);
 
   const onStart = async () => {
     if (status !== TTSStatus.Ready) {
@@ -102,10 +102,6 @@ export default () => {
     };
     audio.play();
   });
-
-  const onChangePlatform = (platform: TTSPlatforms) => {
-    console.log('onChangePlatform', platform);
-  };
 
   return {
     isReady, isLoading, isPlaying, platform, text, setText, messages,
