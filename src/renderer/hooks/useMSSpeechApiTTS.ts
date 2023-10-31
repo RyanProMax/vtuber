@@ -14,18 +14,18 @@ export const getVoice = (voiceId: string) => {
   return MicrosoftSpeechVoices.find(x => x.id === voiceId);
 };
 
-const msDefaultVoice = MicrosoftSpeechVoices.find(x => x.shortName === 'zh-CN-XiaoxiaoNeural');
-const msDefaultOption: TTS.MSSpeechApiSelectOptions = {
+const defaultVoice = MicrosoftSpeechVoices.find(x => x.shortName === 'zh-CN-XiaoxiaoNeural');
+const defaultOption: TTS.MSSpeechApiSelectOptions = {
   language: Languages.ZH_CN,
-  voiceId: msDefaultVoice!.id,
-  styleName: get(msDefaultVoice, 'samples.styleSamples[0].styleName', ''),
-  roleName: get(msDefaultVoice, 'samples.roleSamples[0].roleName', ''),
+  voiceId: defaultVoice!.id,
+  styleName: get(defaultVoice, 'samples.styleSamples[0].styleName', ''),
+  roleName: get(defaultVoice, 'samples.roleSamples[0].roleName', ''),
   rate: 100,
   pitch: 100,
 };
 
-export default ({ text, form }: TTS.MSSpeechApiProps) => {
-  const [selectOptions, setSelectOptions] = useState(msDefaultOption);
+export default ({ text, form }: TTS.HookProps) => {
+  const [selectOptions, setSelectOptions] = useState(defaultOption);
   const voices = useMemo(() => getFilterVoices(selectOptions.language), [selectOptions.language]);
   const selectVoice = useMemo(() => getVoice(selectOptions.voiceId), [selectOptions.voiceId]);
 
@@ -40,7 +40,7 @@ export default ({ text, form }: TTS.MSSpeechApiProps) => {
       retryCount: 10,
       retryInterval: 1000,
     };
-    const result: TTS.MSSpeechApiResponse = await ipcRenderer.invoke(Channels.StartTTS, options);
+    const result: TTS.OnTriggerTTSResponse = await ipcRenderer.invoke(Channels.StartMSSpeechApi, options);
     return result;
   };
 

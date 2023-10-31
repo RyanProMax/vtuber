@@ -4,13 +4,13 @@ import { logger } from '../utils/logger';
 import { Channels } from '../../common/constant';
 import { sleep } from '../utils';
 
-export default class TTS {
-  logger = logger.scope('TTS');
+export default class MSSpeech {
+  logger = logger.scope('MSSpeech');
 
   private buffer = Buffer.alloc(0);
 
   register() {
-    ipcMain.handle(Channels.StartTTS, (_, params: TTS.StartRequest) => {
+    ipcMain.handle(Channels.StartMSSpeechApi, (_, params: TTS.MSSpeechApiRequest) => {
       return this.start(params);
     });
   }
@@ -19,7 +19,7 @@ export default class TTS {
     this.buffer = Buffer.alloc(0);
   }
 
-  async start(params: TTS.StartRequest): Promise<TTS.StartResponse> {
+  async start(params: TTS.MSSpeechApiRequest): Promise<TTS.MSSpeechApiResponse> {
     this.resetBuffer();
     const result = await this.getAudio(params);
     if (result?.data.length) {
@@ -37,7 +37,7 @@ export default class TTS {
   async getAudio({
     startTime = Date.now(), retryCount = 0, retryInterval = 1000,
     ...params
-  }: TTS.StartRequest): Promise<TTS.GetAudioResult> {
+  }: TTS.MSSpeechApiRequest): Promise<TTS.GetAudioResult> {
     try {
       const SSML = this.convertToSSML(params);
       console.log(SSML, retryCount, retryInterval);
@@ -82,7 +82,7 @@ export default class TTS {
   }
 
   private async fetchMSSpeechAPI(SSML: string) {
-    const result: TTS.MSSpeechAPIResponse = await axios({
+    const result: TTS.MSSpeechApiRawResponse = await axios({
       url: 'https://southeastasia.api.speech.microsoft.com/accfreetrial/texttospeech/acc/v3.0-beta1/vcg/speak',
       method: 'post',
       responseType: 'arraybuffer',

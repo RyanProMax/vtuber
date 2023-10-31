@@ -8,14 +8,16 @@ import Store from './Store';
 import AppUpdater from './AppUpdater';
 import MainWindow from './MainWindow';
 import AboutWindow from './AboutWindow';
-import TTS from './TTS';
+import MSSpeech from './MSSpeech';
+import IFlyTek from './IFlyTek';
 
 export class Controller {
   logger = logger.scope('controller');
 
   store: Store | null = null;
   appUpdater = new AppUpdater();
-  tts = new TTS();
+  microsoftSpeech = new MSSpeech();
+  iFlyTek: IFlyTek = new IFlyTek(this);
 
   mainWindow: MainWindow | null = null;
   aboutWindow: AboutWindow | null = null;
@@ -68,8 +70,9 @@ export class Controller {
     this.mainWindow?.register();
     this.aboutWindow?.register();
 
-    // TTS
-    this.tts.register();
+    // platform server
+    this.microsoftSpeech.register();
+    this.iFlyTek.register();
   }
 
   private _register() {

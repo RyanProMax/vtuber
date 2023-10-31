@@ -11,7 +11,7 @@ export enum TTSStatus {
   Done = 'done',
 }
 
-export enum Platforms {
+export enum TTSPlatforms {
   IFlyTek = 'IFlyTek',
   MicrosoftSpeechAPI = 'Microsoft Speech API',
 }
@@ -31,7 +31,7 @@ export default () => {
 
   // config
   const [text, setText] = useState('你好呀旅行者');
-  const [platform] = useState(Platforms.MicrosoftSpeechAPI);
+  const [platform] = useState(TTSPlatforms.IFlyTek);
 
   const onStart = async () => {
     if (status !== TTSStatus.Ready) {
@@ -46,30 +46,37 @@ export default () => {
         throw new Error('onTriggerTTS not define');
       }
 
-      const result = await childRef.current.onTriggerTTS();
+      const { cost, data, error } = await childRef.current.onTriggerTTS();
 
-      if (result?.data) {
-        const audioBlob = new Blob([result.data]);
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setStatus(TTSStatus.Playing);
-        const id = v4();
-        setMessages(h => ([...h, {
-          id, text, cost: result.cost,
-          status: TTSStatus.Playing,
-        }]));
-        const play_result = await playAudio(audioUrl);
-        setMessages(h => {
-          const _h = [...h];
-          const i = _h.find(x => x.id === id);
-          if (i) {
-            i.status = TTSStatus.Done;
-          }
-          return _h;
-        });
-
-        return play_result;
+      if (error) {
+        throw new Error(error);
       }
 
+      if (!data) {
+        throw new Error('result is empty');
+      }
+
+      const audioBlob = new Blob([data]);
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setStatus(TTSStatus.Playing);
+      const id = v4();
+      setMessages(h => ([...h, {
+        id, text, cost,
+        status: TTSStatus.Playing,
+      }]));
+      const play_result = await playAudio(audioUrl);
+      setMessages(h => {
+        const _h = [...h];
+        const i = _h.find(x => x.id === id);
+        if (i) {
+          i.status = TTSStatus.Done;
+        }
+        return _h;
+      });
+
+      return play_result;
+    } catch (e) {
+      TTSLogger.error('start error', e);
       return false;
     } finally {
       setStatus(TTSStatus.Ready);
@@ -91,7 +98,7 @@ export default () => {
     audio.play();
   });
 
-  const onChangePlatform = (platform: Platforms) => {
+  const onChangePlatform = (platform: TTSPlatforms) => {
     console.log('onChangePlatform', platform);
   };
 

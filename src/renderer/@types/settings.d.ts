@@ -1,4 +1,4 @@
-import { Platforms, SettingTypes } from '../hooks/useSettings';
+import { Platforms, SettingTypes } from 'src/common/constant';
 
 declare global {
   namespace Settings {
@@ -8,7 +8,7 @@ declare global {
     };
 
     type IFlyTekSelectOptions = {
-      appID: string
+      appid: string
       apiSecret: string
       apiKey: string
     };

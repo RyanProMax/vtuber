@@ -28,6 +28,17 @@ export enum Channels {
   // sub window
   AboutMe = 'AboutMe',
 
-  // TTS
-  StartTTS = 'StartTTS',
+  // MSSpeech Api
+  StartMSSpeechApi = 'StartMSSpeechApi',
+
+  // IFlyTek Api
+  StartIFlyTekTTSApi = 'StartIFlyTekTTSApi',
+}
+
+export enum Platforms {
+  IFlyTek = 'IFlyTek',
+}
+
+export enum SettingTypes {
+  TTS = 'TTS',
 }

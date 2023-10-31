@@ -10,8 +10,12 @@ declare global {
     } | null
 
     type ChildRef = {
-      onTriggerTTS: () => Promise<MSSpeechApiResponse>
+      onTriggerTTS: () => Promise<OnTriggerTTSResponse>
       onValuesChange: (value: Partial<SelectOptions>) => void
+    }
+
+    type ChildFormProps = {
+      form: FormInstance<any>
     }
 
     type SSMLConvertRequest = {
@@ -24,9 +28,6 @@ declare global {
     }
 
     type AudioData = Buffer;
-    type MSSpeechAPIResponse = {
-      data: AudioData
-    };
 
     type GetAudioResult = {
       cost: number
@@ -40,7 +41,7 @@ declare global {
       status: TTSStatus
     }
 
-    type MSSpeechApiProps = {
+    type HookProps = {
       text: string
       form: FormInstance<any>
     }
@@ -60,11 +61,31 @@ declare global {
       retryInterval?: number
     }
 
-    type MSSpeechApiResponse = {
-      cost: number
+    type MSSpeechApiRawResponse = {
       data: AudioData
-    } | null
+    }
 
-    type SelectOptions = MSSpeechApiSelectOptions
+    type IFlyTekSelectOptions = unknown
+
+    type IFlyTekConfig = {
+      hostUrl: string
+      host: string
+      uri: string
+      appid: string
+      apiSecret: string
+      apiKey: string
+    }
+
+    type IFlyTekApiRequest = {
+      text: string
+    }
+
+    type OnTriggerTTSResponse = {
+      cost: number
+      data?: AudioData
+      error?: string
+    }
+
+    type SelectOptions = MSSpeechApiSelectOptions | IFlyTekSelectOptions
   }
 }

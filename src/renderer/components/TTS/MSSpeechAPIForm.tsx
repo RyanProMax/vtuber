@@ -1,4 +1,4 @@
-import { Form, FormInstance, Select, Slider } from '@arco-design/web-react';
+import { Form, Select, Slider } from '@arco-design/web-react';
 import { useContext, useEffect, useImperativeHandle } from 'react';
 
 import { TTSContext } from 'src/renderer/hooks/useTTS';
@@ -7,9 +7,7 @@ import useMSSpeechApiTTS from 'src/renderer/hooks/useMSSpeechApiTTS';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-export default ({ form }: {
-  form: FormInstance<any>
-}) => {
+export default ({ form }: TTS.ChildFormProps) => {
   const { text, childRef } = useContext(TTSContext)!;
   const {
     onTriggerTTS, onValuesChange, languages, voices,

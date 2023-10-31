@@ -1,13 +1,7 @@
 import { useMemo, useState } from 'react';
+import { Platforms, SettingTypes } from 'src/common/constant';
 import { getUserStore, setUserStore } from '../utils';
 
-export enum Platforms {
-  IFlyTek = 'IFlyTek',
-}
-
-export enum SettingTypes {
-  TTS = 'TTS',
-}
 
 const defaultPlatformOptions: Settings.PlatformOptions = {
   platform: Platforms.IFlyTek,
@@ -15,7 +9,7 @@ const defaultPlatformOptions: Settings.PlatformOptions = {
 };
 
 const defaultOptions: Settings.IFlyTekSelectOptions = {
-  appID: '',
+  appid: '',
   apiKey: '',
   apiSecret: '',
 };

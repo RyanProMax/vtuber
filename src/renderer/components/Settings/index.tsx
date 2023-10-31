@@ -41,7 +41,7 @@ export default () => {
         <FormItem label='Type'>
           <RadioGroup value={platformOptions.settingType} options={options.types} onChange={v => onChangePlatformOptions({ settingType: v })} />
         </FormItem>
-        <FormItem label='AppID' field='appID'>
+        <FormItem label='AppID' field='appid'>
           <Input placeholder='Please Input Your AppID' />
         </FormItem>
         <FormItem label='APISecret' field='apiSecret'>
