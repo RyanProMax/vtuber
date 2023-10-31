@@ -28,9 +28,12 @@ pnpm package
 
 ## Features
 
-- [ ] tts
-- [ ] barrage identification
-- [ ] auto reply
+- [x] TTS: Microsoft Speech API
+- [x] TTS: IFlyTek
+- [ ] Auto Reply: ChatGPT
+- [ ] Barrage Identification: DouYin
+- [ ] Barrage Identification: KuaiShou
+- [ ] Barrage Identification: Bilibili
 
 ## License
 
