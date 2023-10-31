@@ -1,81 +1,48 @@
-import { Form, Select, Slider } from '@arco-design/web-react';
+import { useContext, useMemo } from 'react';
+import { Form, Select } from '@arco-design/web-react';
 
-import { getVoice } from 'src/renderer/hooks/useTTS';
+import { Platforms, TTSContext } from 'src/renderer/hooks/useTTS';
+
+import MSSpeechAPIForm from './MSSpeechAPIForm';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
 
 export default ({
-  form, initialValues, options, onValuesChange,
-  className,
+  platform, onChangePlatform, className,
 }: {
-  form: any,
-  initialValues: TTS.SelectOptions
-  options: TTS.Options
-  onValuesChange: (
-    value: Partial<TTS.SelectOptions>,
-    values: Partial<TTS.SelectOptions>
-  ) => void
+  platform: Platforms
+  onChangePlatform: (platform: Platforms) => void
   className?: string
 }) => {
-  const voice = getVoice(initialValues.voiceId);
-  const { roleSamples, styleSamples } = voice?.samples || {};
+  const { childRef } = useContext(TTSContext)!;
+  const [form] = Form.useForm();
+
+  const loadPlatform = useMemo(() => {
+    switch (platform) {
+      case Platforms.MicrosoftSpeechAPI: {
+        return (
+          <MSSpeechAPIForm
+            form={form}
+          />
+        );
+      }
+      default: return null;
+    }
+  }, [platform]);
 
   return (
     <Form
       form={form}
-      initialValues={initialValues}
-      onValuesChange={onValuesChange}
+      onValuesChange={value => childRef.current?.onValuesChange(value)}
       layout='vertical'
       autoComplete='off'
       className={className}
     >
-      <FormItem label='Language' field='language'>
-        <Select placeholder='Please select'>
-          {options.languages.map((item) => (
-            <Option key={item.key} value={item.value}>
-              {item.value}
-            </Option>
-          ))}
-        </Select>
+      <FormItem label='Platform'>
+        <Select value={platform} onChange={onChangePlatform} options={Object.values(Platforms)} />
       </FormItem>
-      <FormItem label='Voice' field='voiceId'>
-        <Select placeholder='Please select'>
-          {options.voices.map((item) => (
-            <Option key={item.id} value={item.id}>
-              {item.properties.LocalName}
-            </Option>
-          ))}
-        </Select>
-      </FormItem>
-      {styleSamples?.length ? (
-        <FormItem label='Style' field='styleName'>
-          <Select placeholder='Please select'>
-            {styleSamples.map((item) => (
-              <Option key={item.styleName} value={item.styleName}>
-                {item.styleName}
-              </Option>
-            ))}
-          </Select>
-        </FormItem>
-      ) : null}
-      {roleSamples?.length ? (
-        <FormItem label='Role' field='roleName'>
-          <Select placeholder='Please select'>
-            {roleSamples.map((item) => (
-              <Option key={item.roleName} value={item.roleName}>
-                {item.roleName}
-              </Option>
-            ))}
-          </Select>
-        </FormItem>
-      ) : null}
-      <FormItem label='Rate' field='rate'>
-        <Slider showInput max={300} />
-      </FormItem>
-      <FormItem label='Pitch' field='pitch'>
-        <Slider showInput max={300} />
-      </FormItem>
+      {/* different platform hook */}
+      {loadPlatform}
     </Form>
   );
 };

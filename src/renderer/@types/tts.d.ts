@@ -1,9 +1,19 @@
+import { FormInstance } from '@arco-design/web-react';
 import Languages from 'src/common/langs';
-import Voices from 'src/common/voices';
 import { TTSStatus } from 'src/renderer/hooks/useTTS';
 
 declare global {
   namespace TTS {
+    type Context = {
+      text: string
+      childRef: React.MutableRefObject<ChildRef | undefined>
+    } | null
+
+    type ChildRef = {
+      onTriggerTTS: () => Promise<MSSpeechApiResponse>
+      onValuesChange: (value: Partial<SelectOptions>) => void
+    }
+
     type SSMLConvertRequest = {
       text: string
       voice: string
@@ -12,17 +22,6 @@ declare global {
       rate?: number
       pitch?: number
     }
-
-    type StartRequest = SSMLConvertRequest & {
-      startTime?: number
-      retryCount?: number
-      retryInterval?: number
-    };
-
-    type StartResponse = {
-      cost: number
-      data: AudioData
-    } | null
 
     type AudioData = Buffer;
     type MSSpeechAPIResponse = {
@@ -34,14 +33,19 @@ declare global {
       data: AudioData
     } | null
 
-    type HistoryItem = {
+    type Message = {
       id: string,
       cost: number
       text: string
       status: TTSStatus
     }
 
-    type SelectOptions = {
+    type MSSpeechApiProps = {
+      text: string
+      form: FormInstance<any>
+    }
+
+    type MSSpeechApiSelectOptions = {
       language: Languages
       voiceId: string,
       styleName: string,
@@ -50,9 +54,17 @@ declare global {
       pitch: number,
     }
 
-    type Options = {
-      languages: { key: string, value: string }[]
-      voices: typeof Voices
+    type MSSpeechApiRequest = SSMLConvertRequest & {
+      startTime?: number
+      retryCount?: number
+      retryInterval?: number
     }
+
+    type MSSpeechApiResponse = {
+      cost: number
+      data: AudioData
+    } | null
+
+    type SelectOptions = MSSpeechApiSelectOptions
   }
 }

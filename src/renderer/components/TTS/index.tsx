@@ -1,19 +1,17 @@
-import { Button, Input, Empty, Form } from '@arco-design/web-react';
+import { Button, Input, Empty } from '@arco-design/web-react';
 import { IconMusic } from '@arco-design/web-react/icon';
-import { get } from 'lodash-es';
 
-import useTTS, { getFilterVoices, getVoice } from 'src/renderer/hooks/useTTS';
+import useTTS from 'src/renderer/hooks/useTTS';
 
-import History from './History';
+import Message from './Message';
 import TTSForm from './TTSForm';
 
 import './index.less';
 
 export default () => {
-  const [form] = Form.useForm();
   const {
-    history, isReady, isLoading, isPlaying, onStart,
-    selectOptions, setSelectOptions, options, text, setText,
+    isReady, isLoading, isPlaying, platform, text, setText, messages,
+    onStart, onChangePlatform, TTSContext, childRef,
   } = useTTS();
 
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
@@ -22,61 +20,46 @@ export default () => {
     }
   };
 
-  const onValuesChange = (value: Partial<TTS.SelectOptions>) => {
-    setSelectOptions(oldV => ({
-      ...oldV,
-      ...value,
-    }));
-    if (Object.keys(value)[0] === 'language') {
-      const filterVoices = getFilterVoices(value.language!);
-      form.setFieldValue('voiceId', filterVoices[0]?.id || '');
-    }
-    if (Object.keys(value)[0] === 'voiceId') {
-      const voice = getVoice(value.voiceId!);
-      const styleName = get(voice, 'samples.styleSamples[0].styleName', '');
-      const roleName = get(voice, 'samples.roleSamples[0].roleName', '');
-      form.setFieldsValue({ styleName, roleName });
-    }
-  };
-
   return (
-    <div className='tts'>
-      <div className='tts__left'>
-        <div className='tts__content'>
-          {history.length ? history.map(item => (
-            <History key={item.id} {...item} />
-          )) : (
-            <Empty className={'tts__content-empty'} />
-          )}
+    <TTSContext.Provider value={{
+      text, childRef,
+    }}>
+      <div className='tts'>
+        <div className='tts__left'>
+          <div className='tts__content'>
+            {messages.length ? messages.map(msg => (
+              <Message key={msg.id} {...msg} />
+            )) : (
+              <Empty className={'tts__content-empty'} />
+            )}
+          </div>
+          <Input.Group compact className={'tts__input-group'}>
+            <Input
+              value={text}
+              onChange={setText}
+              onKeyDown={onKeyDown}
+              placeholder='Please enter'
+              className={'tts__input'}
+              disabled={!isReady}
+            />
+            <Button
+              type='primary'
+              loading={isLoading}
+              onClick={onStart}
+              disabled={!isReady}
+            >
+              {isPlaying ? (
+                <IconMusic />
+              ) : isLoading ? 'Loading' : 'Send'}
+            </Button>
+          </Input.Group>
         </div>
-        <Input.Group compact className={'tts__input-group'}>
-          <Input
-            value={text}
-            onChange={setText}
-            onKeyDown={onKeyDown}
-            placeholder='Please enter'
-            className={'tts__input'}
-            disabled={!isReady}
-          />
-          <Button
-            type='primary'
-            loading={isLoading}
-            onClick={onStart}
-            disabled={!isReady}
-          >
-            {isPlaying ? (
-              <IconMusic />
-            ) : isLoading ? 'Loading' : 'Send'}
-          </Button>
-        </Input.Group>
+        <TTSForm
+          platform={platform}
+          onChangePlatform={onChangePlatform}
+          className='tts__right'
+        />
       </div>
-      <TTSForm
-        form={form}
-        initialValues={selectOptions}
-        onValuesChange={onValuesChange}
-        options={options}
-        className='tts__right'
-      />
-    </div>
+    </TTSContext.Provider>
   );
 };
