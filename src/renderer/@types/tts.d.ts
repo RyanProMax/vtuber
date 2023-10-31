@@ -61,7 +61,7 @@ declare global {
       retryInterval?: number
     }
 
-    type MSSpeechApiRawResponse = {
+    type MSSpeechApiResponse = {
       data: AudioData
     }
 

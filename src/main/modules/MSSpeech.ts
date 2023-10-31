@@ -19,7 +19,7 @@ export default class MSSpeech {
     this.buffer = Buffer.alloc(0);
   }
 
-  async start(params: TTS.MSSpeechApiRequest): Promise<TTS.MSSpeechApiResponse> {
+  async start(params: TTS.MSSpeechApiRequest): Promise<TTS.OnTriggerTTSResponse> {
     this.resetBuffer();
     const result = await this.getAudio(params);
     if (result?.data.length) {
@@ -31,7 +31,11 @@ export default class MSSpeech {
         data: this.buffer,
       };
     }
-    return null;
+
+    return {
+      cost: result!.cost,
+      error: 'buffer is empty',
+    };
   }
 
   async getAudio({
@@ -82,7 +86,7 @@ export default class MSSpeech {
   }
 
   private async fetchMSSpeechAPI(SSML: string) {
-    const result: TTS.MSSpeechApiRawResponse = await axios({
+    const result: TTS.MSSpeechApiResponse = await axios({
       url: 'https://southeastasia.api.speech.microsoft.com/accfreetrial/texttospeech/acc/v3.0-beta1/vcg/speak',
       method: 'post',
       responseType: 'arraybuffer',

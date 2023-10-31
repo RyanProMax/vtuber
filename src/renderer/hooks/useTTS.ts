@@ -46,7 +46,9 @@ export default () => {
         throw new Error('onTriggerTTS not define');
       }
 
-      const { cost, data, error } = await childRef.current.onTriggerTTS();
+      const result = await childRef.current.onTriggerTTS();
+      TTSLogger.info('onTriggerTTS result', result);
+      const { cost, data, error } = result;
 
       if (error) {
         throw new Error(error);
@@ -58,13 +60,16 @@ export default () => {
 
       const audioBlob = new Blob([data]);
       const audioUrl = URL.createObjectURL(audioBlob);
+      TTSLogger.info('audioUrl', audioUrl);
+
       setStatus(TTSStatus.Playing);
       const id = v4();
       setMessages(h => ([...h, {
         id, text, cost,
         status: TTSStatus.Playing,
       }]));
-      const play_result = await playAudio(audioUrl);
+      await playAudio(audioUrl);
+
       setMessages(h => {
         const _h = [...h];
         const i = _h.find(x => x.id === id);
@@ -74,7 +79,7 @@ export default () => {
         return _h;
       });
 
-      return play_result;
+      return true;
     } catch (e) {
       TTSLogger.error('start error', e);
       return false;
@@ -83,17 +88,17 @@ export default () => {
     }
   };
 
-  const playAudio = (url: string): Promise<boolean> => new Promise(resolve => {
+  const playAudio = (url: string) => new Promise((resolve, reject) => {
     if (!audioRef.current) {
       audioRef.current = document.createElement('audio');
     }
     const audio = audioRef.current;
     audio.src = url;
     audio.onended = () => {
-      resolve(true);
+      resolve(null);
     };
     audio.onerror = () => {
-      resolve(false);
+      reject(new Error('fail to play audio'));
     };
     audio.play();
   });

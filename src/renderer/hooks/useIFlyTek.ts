@@ -5,9 +5,7 @@ import { ipcRenderer } from 'src/renderer/utils';
 
 const defaultOption: TTS.IFlyTekSelectOptions = {};
 
-export default ({ text, form }: TTS.HookProps) => {
-  console.log('form', form, 'text', text);
-
+export default ({ text }: TTS.HookProps) => {
   const [selectOptions] = useState(defaultOption);
 
   const onTriggerTTS = () => {
