@@ -117,7 +117,9 @@ export default class IFlyTek {
             app_id: this.config!.appid
           },
           business: {
-            aue: 'raw',
+            // raw: unzip pcm or wav, can not use audio to play
+            // lame: mp3 format
+            aue: 'lame',
             auf: 'audio/L16;rate=16000',
             vcn: 'xiaoyan',
             tte: 'UTF8'
