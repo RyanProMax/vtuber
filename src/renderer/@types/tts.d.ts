@@ -1,6 +1,7 @@
 import { FormInstance } from '@arco-design/web-react';
 import Languages from 'src/common/langs';
 import { TTSStatus } from 'src/renderer/hooks/useTTS';
+import { RoleValue } from 'src/renderer/hooks/useIFlyTek';
 
 declare global {
   namespace TTS {
@@ -65,7 +66,12 @@ declare global {
       data: AudioData
     }
 
-    type IFlyTekSelectOptions = unknown
+    type IFlyTekSelectOptions = {
+      role: RoleValue
+      speed: number
+      volume: number
+      pitch: number
+    }
 
     type IFlyTekConfig = {
       hostUrl: string
@@ -78,7 +84,7 @@ declare global {
 
     type IFlyTekApiRequest = {
       text: string
-    }
+    } & IFlyTekSelectOptions
 
     type OnTriggerTTSResponse = {
       cost: number

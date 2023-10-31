@@ -15,7 +15,7 @@ export default ({ form }: TTS.ChildFormProps) => {
   } = useMSSpeechApiTTS({ text, form });
   const { roleSamples, styleSamples } = selectVoice?.samples || {};
 
-  useImperativeHandle(childRef, () => ({
+  useImperativeHandle(childRef as any, () => ({
     onTriggerTTS, onValuesChange,
   }));
 

@@ -112,6 +112,10 @@ export default class IFlyTek {
           }
         });
 
+        const {
+          text, role, speed = 50, volume = 50,
+          pitch = 50,
+        } = params;
         this.ws.send(JSON.stringify({
           common: {
             app_id: this.config!.appid
@@ -121,11 +125,15 @@ export default class IFlyTek {
             // lame: mp3 format
             aue: 'lame',
             auf: 'audio/L16;rate=16000',
-            vcn: 'xiaoyan',
-            tte: 'UTF8'
+            tte: 'UTF8',
+            vcn: role,
+            speed, // [0-100], default: 50
+            volume, // [0-100], default: 50
+            pitch, // [0-100], default: 50
+            // engine_type: 'intp65',
           },
           data: {
-            text: Buffer.from(params.text).toString('base64'),
+            text: Buffer.from(text).toString('base64'),
             status: 2
           }
         }));
