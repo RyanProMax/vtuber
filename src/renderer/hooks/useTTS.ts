@@ -24,7 +24,7 @@ export default () => {
 
   // status
   const [status, setStatus] = useState(TTSStatus.Ready);
-  const [messages, setMessages] = useState<TTS.Message[]>([]);
+  const [messages, setMessages] = useState<Message.Item[]>([]);
   const isReady = status === TTSStatus.Ready;
   const isLoading = status === TTSStatus.Loading;
   const isPlaying = status === TTSStatus.Playing;

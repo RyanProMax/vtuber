@@ -1,6 +1,5 @@
 import { FormInstance } from '@arco-design/web-react';
 import Languages from 'src/common/langs';
-import { TTSStatus } from 'src/renderer/hooks/useTTS';
 import { RoleValue } from 'src/renderer/hooks/useIFlyTek';
 
 declare global {
@@ -34,13 +33,6 @@ declare global {
       cost: number
       data: AudioData
     } | null
-
-    type Message = {
-      id: string,
-      cost: number
-      text: string
-      status: TTSStatus
-    }
 
     type HookProps = {
       text: string

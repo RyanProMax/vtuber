@@ -63,4 +63,45 @@
       display: flex;
     }
   }
+
+  &__message-item {
+    width: 100%;
+    position: relative;
+    line-height: 1.5;
+    word-wrap: break-word;
+    word-break: break-all;
+
+    &:not(:first-child) {
+      margin-top: 6px;
+    }
+
+    &::before {
+      position: absolute;
+      content: '';
+      width: @pointSize;
+      height: @pointSize;
+      border-radius: 50%;
+      left: -16px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &--playing {
+      &::before {
+        background-color: @color-success;
+      }
+    }
+
+    &--done {
+      &::before {
+        background-color: @color-gray;
+      }
+    }
+
+    &__cost {
+      margin-left: 10px;
+      font-size: small;
+      color: var(--color-text-3)
+    }
+  }
 }

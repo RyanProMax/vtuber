@@ -1,18 +1,18 @@
 import { Button, Input, Empty } from '@arco-design/web-react';
 import { IconMusic } from '@arco-design/web-react/icon';
 
-import useTTS from 'src/renderer/hooks/useTTS';
+import useAutoChat from 'src/renderer/hooks/useAutoChat';
 
 import Message from '../Message';
-import TTSForm from './TTSForm';
+import SettingForm from './SettingForm';
 
 import './index.less';
 
 export default () => {
   const {
     isReady, isLoading, isPlaying, platform, text, setText, messages,
-    onStart, onChangePlatform, TTSContext, childRef,
-  } = useTTS();
+    onStart, onChangePlatform, AutoChatContext, childRef,
+  } = useAutoChat();
 
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.code === 'Enter') {
@@ -21,7 +21,7 @@ export default () => {
   };
 
   return (
-    <TTSContext.Provider value={{
+    <AutoChatContext.Provider value={{
       text, childRef,
     }}>
       <div className='tts'>
@@ -54,12 +54,12 @@ export default () => {
             </Button>
           </Input.Group>
         </div>
-        <TTSForm
+        <SettingForm
           platform={platform}
           onChangePlatform={onChangePlatform}
           className='tts__right'
         />
       </div>
-    </TTSContext.Provider>
+    </AutoChatContext.Provider>
   );
 };
