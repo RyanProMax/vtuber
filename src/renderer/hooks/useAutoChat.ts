@@ -6,9 +6,11 @@ const AutoChatLogger = log.scope('AutoChat');
 
 export enum AutoChatStatus {
   Ready = 'ready',
+  Question = 'question',
   Loading = 'loading',
   Playing = 'playing',
   Done = 'done',
+  Error = 'error',
 }
 
 export enum AutoChatPlatforms {
@@ -36,8 +38,15 @@ export default () => {
       return false;
     }
 
+    const startTime = Date.now();
     try {
       AutoChatLogger.info('onStart');
+      setMessages(h => ([...h, {
+        id: v4(),
+        text,
+        status: AutoChatStatus.Question,
+      }]));
+
       setStatus(AutoChatStatus.Loading);
 
       if (!childRef.current?.onTrigger) {
@@ -55,15 +64,22 @@ export default () => {
         throw new Error('result is empty');
       }
 
-      const id = v4();
       setMessages(h => ([...h, {
-        id, text, cost,
+        id: v4(), text, cost,
         status: AutoChatStatus.Done,
       }]));
 
       return true;
     } catch (e) {
       AutoChatLogger.error('start error', e);
+
+      setMessages(h => ([...h, {
+        id: v4(),
+        text: (e as any).message || '服务异常，请稍后再试',
+        cost: Date.now() - startTime,
+        status: AutoChatStatus.Error,
+      }]));
+
       return false;
     } finally {
       setStatus(AutoChatStatus.Ready);

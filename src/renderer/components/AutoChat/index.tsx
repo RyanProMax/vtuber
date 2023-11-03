@@ -24,22 +24,22 @@ export default () => {
     <AutoChatContext.Provider value={{
       text, childRef,
     }}>
-      <div className='tts'>
-        <div className='tts__left'>
-          <div className='tts__content'>
+      <div className='autochat'>
+        <div className='autochat__left'>
+          <div className='autochat__content'>
             {messages.length ? messages.map(msg => (
               <Message key={msg.id} {...msg} />
             )) : (
-              <Empty className={'tts__content-empty'} />
+              <Empty className={'autochat__content-empty'} />
             )}
           </div>
-          <Input.Group compact className={'tts__input-group'}>
+          <Input.Group compact className={'autochat__input-group'}>
             <Input
               value={text}
               onChange={setText}
               onKeyDown={onKeyDown}
               placeholder='Please enter'
-              className={'tts__input'}
+              className={'autochat__input'}
               disabled={!isReady}
             />
             <Button
@@ -57,7 +57,7 @@ export default () => {
         <SettingForm
           platform={platform}
           onChangePlatform={onChangePlatform}
-          className='tts__right'
+          className='autochat__right'
         />
       </div>
     </AutoChatContext.Provider>

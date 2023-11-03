@@ -9,7 +9,9 @@ export default ({ text, cost, status }: Message.Item) => {
       `message-item--${status}`
     )}>
       {text}
-      <span className='message-item__cost'>({cost}ms)</span>
+      {cost ? (
+        <span className='message-item__cost'>({cost}ms)</span>
+      ) : null}
     </p>
   );
 };

@@ -22,6 +22,12 @@
     transform: translateY(-50%);
   }
 
+  &--question {
+    &::before {
+      background-color: @color-warning;
+    }
+  }
+
   &--playing {
     &::before {
       background-color: @color-success;
@@ -32,6 +38,18 @@
     &::before {
       background-color: @color-gray;
     }
+  }
+
+  &--error {
+    color: rgba(var(--red-5), 0.8);
+
+    &::before {
+      background-color: @color-error;
+    }
+  }
+
+  &--error &__cost {
+    color: rgba(var(--red-5), 0.6);
   }
 
   &__cost {

@@ -7,7 +7,7 @@ declare global {
 
     type Item = {
       id: string,
-      cost: number
+      cost?: number
       text: string
       status: Status
     }
