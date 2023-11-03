@@ -9,6 +9,7 @@ export enum TTSStatus {
   Loading = 'loading',
   Playing = 'playing',
   Done = 'done',
+  Error = 'error',
 }
 
 export enum TTSPlatforms {
@@ -38,17 +39,18 @@ export default () => {
       return false;
     }
 
+    const startTime = Date.now();
     try {
       TTSLogger.info('onStart');
       setStatus(TTSStatus.Loading);
 
-      if (!childRef.current?.onTriggerTTS) {
-        throw new Error('onTriggerTTS not define');
+      if (!childRef.current?.onTrigger) {
+        throw new Error('onTrigger not define');
       }
 
-      const result = await childRef.current.onTriggerTTS();
-      TTSLogger.info('onTriggerTTS result', result);
-      const { cost, data, error } = result;
+      const result = await childRef.current.onTrigger();
+      TTSLogger.info('onTrigger result', result);
+      const { data, error } = result;
 
       if (error) {
         throw new Error(error);
@@ -63,13 +65,16 @@ export default () => {
       TTSLogger.info('audioUrl', audioUrl);
 
       setStatus(TTSStatus.Playing);
+
       const id = v4();
       setMessages(h => ([...h, {
-        id, text, cost,
+        id,
+        text,
+        cost: Date.now() - startTime,
         status: TTSStatus.Playing,
       }]));
-      await playAudio(audioUrl);
 
+      await playAudio(audioUrl);
       setMessages(h => {
         const _h = [...h];
         const i = _h.find(x => x.id === id);
@@ -82,6 +87,14 @@ export default () => {
       return true;
     } catch (e) {
       TTSLogger.error('start error', e);
+
+      setMessages(h => ([...h, {
+        id: v4(),
+        text: (e as any).message || '服务异常，请稍后再试',
+        cost: Date.now() - startTime,
+        status: TTSStatus.Error,
+      }]));
+
       return false;
     } finally {
       setStatus(TTSStatus.Ready);

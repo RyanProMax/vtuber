@@ -19,23 +19,17 @@ export default class MSSpeech {
     this.buffer = Buffer.alloc(0);
   }
 
-  async start(params: TTS.MSSpeechApiRequest): Promise<TTS.OnTriggerTTSResponse> {
+  async start(params: TTS.MSSpeechApiRequest): Promise<TTS.OnTriggerResponse> {
     this.resetBuffer();
     const result = await this.getAudio(params);
     if (result?.data.length) {
       this.buffer = Buffer.concat([this.buffer, result.data]);
     }
     if (this.buffer.length > 0) {
-      return {
-        cost: result!.cost,
-        data: this.buffer,
-      };
+      return { data: this.buffer };
     }
 
-    return {
-      cost: result!.cost,
-      error: 'buffer is empty',
-    };
+    return { error: 'buffer is empty' };
   }
 
   async getAudio({

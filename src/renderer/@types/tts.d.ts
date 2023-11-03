@@ -10,7 +10,7 @@ declare global {
     } | null
 
     type ChildRef = {
-      onTriggerTTS: () => Promise<OnTriggerTTSResponse>
+      onTrigger: () => Promise<OnTriggerResponse>
       onValuesChange: (value: Partial<SelectOptions>) => void
     }
 
@@ -78,8 +78,7 @@ declare global {
       text: string
     } & IFlyTekSelectOptions
 
-    type OnTriggerTTSResponse = {
-      cost: number
+    type OnTriggerResponse = {
       data?: AudioData
       error?: string
     }

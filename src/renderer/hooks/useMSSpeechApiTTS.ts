@@ -29,7 +29,7 @@ export default ({ text, form }: TTS.HookProps) => {
   const voices = useMemo(() => getFilterVoices(selectOptions.language), [selectOptions.language]);
   const selectVoice = useMemo(() => getVoice(selectOptions.voiceId), [selectOptions.voiceId]);
 
-  const onTriggerTTS = async () => {
+  const onTrigger = async () => {
     const options: TTS.MSSpeechApiRequest = {
       text,
       voice: getVoice(selectOptions.voiceId)?.shortName || '',
@@ -40,7 +40,7 @@ export default ({ text, form }: TTS.HookProps) => {
       retryCount: 10,
       retryInterval: 1000,
     };
-    const result: TTS.OnTriggerTTSResponse = await ipcRenderer.invoke(Channels.StartMSSpeechApi, options);
+    const result: TTS.OnTriggerResponse = await ipcRenderer.invoke(Channels.StartMSSpeechApi, options);
     return result;
   };
 
@@ -59,7 +59,7 @@ export default ({ text, form }: TTS.HookProps) => {
   };
 
   return {
-    onTriggerTTS, onValuesChange, languages: Languages, voices,
+    onTrigger, onValuesChange, languages: Languages, voices,
     selectVoice, selectOptions, setSelectOptions,
   };
 };

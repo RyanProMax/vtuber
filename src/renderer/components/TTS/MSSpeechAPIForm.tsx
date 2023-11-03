@@ -10,13 +10,13 @@ const Option = Select.Option;
 export default ({ form }: TTS.ChildFormProps) => {
   const { text, childRef } = useContext(TTSContext)!;
   const {
-    onTriggerTTS, onValuesChange, languages, voices,
+    onTrigger, onValuesChange, languages, voices,
     selectVoice, selectOptions,
   } = useMSSpeechApiTTS({ text, form });
   const { roleSamples, styleSamples } = selectVoice?.samples || {};
 
   useImperativeHandle(childRef as any, () => ({
-    onTriggerTTS, onValuesChange,
+    onTrigger, onValuesChange,
   }));
 
   useEffect(() => {

@@ -39,9 +39,7 @@ export default class IFlyTek {
     return `${authStr}&date=${date}&host=${host}`;
   }
 
-  async start(params: TTS.IFlyTekApiRequest): Promise<TTS.OnTriggerTTSResponse> {
-    const startTime = Date.now();
-
+  async start(params: TTS.IFlyTekApiRequest): Promise<TTS.OnTriggerResponse> {
     try {
       let buffer = Buffer.alloc(0);
       await new Promise((_resolve, reject) => {
@@ -105,10 +103,7 @@ export default class IFlyTek {
 
           if (res.code == 0 && res.data.status == 2) {
             this.ws?.close();
-            resolve({
-              cost: Date.now() - startTime,
-              data: buffer,
-            });
+            resolve({ data: buffer });
           }
         });
 
@@ -141,10 +136,7 @@ export default class IFlyTek {
     } catch (err) {
       this.logger.error('start ws error', err);
 
-      return {
-        cost: Date.now() - startTime,
-        error: (err as any).message
-      };
+      return { error: (err as any).message };
     }
   }
 }

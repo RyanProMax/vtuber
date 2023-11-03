@@ -21,7 +21,6 @@ declare global {
     type SelectOptions = ChatGPTSelectOptions
 
     type OnTriggerResponse = {
-      cost: number
       data?: unknown
       error?: string
     }

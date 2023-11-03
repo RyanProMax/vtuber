@@ -20,7 +20,7 @@ export const Roles = [
 ];
 
 const defaultOption: TTS.IFlyTekSelectOptions = {
-  role: RoleValue.xiaoyan,
+  role: RoleValue.aisjinger,
   speed: 50,
   volume: 50,
   pitch: 50,
@@ -29,7 +29,7 @@ const defaultOption: TTS.IFlyTekSelectOptions = {
 export default ({ text }: TTS.HookProps) => {
   const [selectOptions, setSelectOptions] = useState(defaultOption);
 
-  const onTriggerTTS = () => {
+  const onTrigger = () => {
     const params: TTS.IFlyTekApiRequest = {
       text,
       role: selectOptions.role,
@@ -37,7 +37,7 @@ export default ({ text }: TTS.HookProps) => {
       volume: selectOptions.volume,
       pitch: selectOptions.pitch,
     };
-    return ipcRenderer.invoke(Channels.StartIFlyTekTTSApi, params) as Promise<TTS.OnTriggerTTSResponse>;
+    return ipcRenderer.invoke(Channels.StartIFlyTekTTSApi, params) as Promise<TTS.OnTriggerResponse>;
   };
 
   const onValuesChange = (value: Partial<TTS.IFlyTekSelectOptions>) => {
@@ -45,7 +45,7 @@ export default ({ text }: TTS.HookProps) => {
   };
 
   return {
-    onTriggerTTS, onValuesChange, selectOptions,
+    onTrigger, onValuesChange, selectOptions,
     roles: Roles,
   };
 };

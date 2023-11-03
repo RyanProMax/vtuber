@@ -9,11 +9,11 @@ const FormItem = Form.Item;
 export default ({ form }: TTS.ChildFormProps) => {
   const { text, childRef } = useContext(TTSContext)!;
   const {
-    onTriggerTTS, onValuesChange, selectOptions, roles
+    onTrigger, onValuesChange, selectOptions, roles
   } = useIFlyTek({ text, form });
 
   useImperativeHandle(childRef as any, () => ({
-    onTriggerTTS, onValuesChange,
+    onTrigger, onValuesChange,
   }));
 
   useEffect(() => {
