@@ -1,11 +1,11 @@
 {
-  "name": "vtuber",
+  "name": "webcast-toolkit",
   "version": "0.0.1",
   "author": "Ryan",
-  "homepage": "https://github.com/RyanProMax/vtuber#readme",
+  "homepage": "https://github.com/RyanProMax/webcast-toolkit#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RyanProMax/vtuber.git"
+    "url": "git+https://github.com/RyanProMax/webcast-toolkit.git"
   },
   "description": "An Electron boilerplate including TypeScript, React, Rspack and ESLint.",
   "main": "build/loader.js",
