@@ -7,13 +7,17 @@ declare global {
       settingType: SettingTypes
     };
 
+    type OpenAISelectOptions = {
+      apiKey: string
+    };
+
     type IFlyTekSelectOptions = {
       appid: string
       apiSecret: string
       apiKey: string
     };
 
-    type SelectOptions = IFlyTekSelectOptions;
+    type SelectOptions = OpenAISelectOptions | IFlyTekSelectOptions;
 
     type Options = {
       platforms: Platforms[]

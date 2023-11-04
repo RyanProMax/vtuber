@@ -1,7 +1,11 @@
-import { Form, Input, Radio } from '@arco-design/web-react';
-import { useEffect } from 'react';
+import { useMemo } from 'react';
+import { Form, Radio } from '@arco-design/web-react';
 
+import { Platforms } from 'src/common/constant';
 import useSettings from 'src/renderer/hooks/useSettings';
+
+import OpenAIForm from './OpenAIForm';
+import IFlyTekForm from './IFlyTekForm';
 
 import './index.less';
 
@@ -13,18 +17,20 @@ export default () => {
 
   const {
     platformOptions, selectOptions, options, onChangePlatformOptions,
-    getPlatformSettings, setPlatformSettings,
-  } = useSettings();
+    setPlatformSettings,
+  } = useSettings({ form });
 
-  console.log('selectOptions', selectOptions);
-  console.log('options', options);
-
-  useEffect(() => {
-    (async () => {
-      const formData = await getPlatformSettings();
-      form.setFieldsValue(formData);
-    })();
-  }, []);
+  const loadPlatformForm = useMemo(() => {
+    switch (platformOptions.platform) {
+      case Platforms.OpenAI: {
+        return <OpenAIForm />;
+      }
+      case Platforms.IFlyTek: {
+        return <IFlyTekForm />;
+      }
+      default: return null;
+    }
+  }, [platformOptions.platform]);
 
   return (
     <div className='settings'>
@@ -41,15 +47,7 @@ export default () => {
         <FormItem label='Type'>
           <RadioGroup value={platformOptions.settingType} options={options.types} onChange={v => onChangePlatformOptions({ settingType: v })} />
         </FormItem>
-        <FormItem label='AppID' field='appid'>
-          <Input placeholder='Please Input Your AppID' />
-        </FormItem>
-        <FormItem label='APISecret' field='apiSecret'>
-          <Input placeholder='Please Input Your APISecret' />
-        </FormItem>
-        <FormItem label='APIKey' field='apiKey'>
-          <Input placeholder='Please Input Your APIKey' />
-        </FormItem>
+        {loadPlatformForm}
       </Form>
     </div>
   );

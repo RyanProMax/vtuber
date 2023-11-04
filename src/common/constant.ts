@@ -36,9 +36,11 @@ export enum Channels {
 }
 
 export enum Platforms {
+  OpenAI = 'OpenAI',
   IFlyTek = 'IFlyTek',
 }
 
 export enum SettingTypes {
+  AutoChat = 'AutoChat',
   TTS = 'TTS',
 }
